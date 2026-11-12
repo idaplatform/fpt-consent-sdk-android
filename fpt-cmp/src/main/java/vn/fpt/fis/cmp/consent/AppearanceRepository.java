@@ -12,7 +12,9 @@ import org.json.JSONObject;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
@@ -126,7 +128,7 @@ public final class AppearanceRepository {
             if (d < distance && file.isFile()) try {
                 if (!digest.equals(fileHash(file))) continue;
                 best = Typeface.createFromFile(file); distance = d;
-            } catch (Exception ignored) { }
+            } catch (IOException | RuntimeException ignored) { }
         }
         if (best == null) {
             String family = appearance.family();
@@ -139,7 +141,7 @@ public final class AppearanceRepository {
         JSONObject type = appearance.json().optJSONObject("typography");
         JSONArray list = type == null ? null : type.optJSONArray("fonts");
         if (list == null) return;
-        fonts.mkdirs();
+        if (!fonts.isDirectory() && !fonts.mkdirs()) return; // No font cache: theme falls back to system fonts.
         long deadline = SystemClock.elapsedRealtime() + 3000;
         for (int i = 0; i < Math.min(4, list.length()); i++) {
             JSONObject font = list.optJSONObject(i);
@@ -168,22 +170,28 @@ public final class AppearanceRepository {
                 }
                 if (digest.equals(fileHash(temporary))) {
                     Typeface.createFromFile(temporary); // Reject invalid native font files before caching.
-                    if (target.exists()) target.delete();
-                    temporary.renameTo(target);
+                    if (target.exists() && !target.delete()) continue;
+                    if (temporary.renameTo(target)) temporary = null;
                 }
-            } catch (Exception ignored) { /* Font errors never discard a usable theme. */ }
-            finally { if (conn != null) conn.disconnect(); if (temporary != null) temporary.delete(); }
+            } catch (IOException | RuntimeException ignored) { /* Font errors never discard a usable theme. */ }
+            finally {
+                if (conn != null) conn.disconnect();
+                if (temporary != null && !temporary.delete()) temporary.deleteOnExit();
+            }
         }
     }
-    private static String fileHash(File file) throws Exception {
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+    private static String fileHash(File file) throws IOException {
+        MessageDigest digest = sha256();
         try (InputStream in = new FileInputStream(file)) { byte[] b = new byte[8192]; int n;
             while ((n = in.read(b)) != -1) digest.update(b, 0, n); }
         return hex(digest.digest());
     }
+    private static MessageDigest sha256() {
+        try { return MessageDigest.getInstance("SHA-256"); }
+        catch (NoSuchAlgorithmException e) { throw new IllegalStateException(e); }
+    }
     private static String hash(String value) {
-        try { return hex(MessageDigest.getInstance("SHA-256").digest(value.getBytes("UTF-8"))); }
-        catch (Exception e) { throw new IllegalStateException(e); }
+        return hex(sha256().digest(value.getBytes(StandardCharsets.UTF_8)));
     }
     private static String hex(byte[] bytes) {
         StringBuilder out = new StringBuilder(); for (byte b : bytes) out.append(String.format("%02x", b & 255)); return out.toString();

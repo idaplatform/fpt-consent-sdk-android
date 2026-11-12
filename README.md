@@ -158,6 +158,10 @@ cleartext ở **bản debug** — tạo `app/src/debug/AndroidManifest.xml`:
 </manifest>
 ```
 
+**Backup dữ liệu app.** SDK không khai `android:allowBackup` — đây là quyết định của app (nếu SDK khai
+`false` thì app đang để `true` sẽ lỗi `Manifest merger failed`). Để loại trừ dữ liệu SDK khỏi backup, dùng
+hai resource có sẵn trong AAR — xem [Bảo vệ dữ liệu SDK khỏi Android backup](#bảo-vệ-dữ-liệu-sdk-khỏi-android-backup).
+
 Sync Gradle. Import được `vn.fpt.fis.cmp.consent.ConsentCmp` là xong phần cài đặt.
 
 ## Bước 4. Khởi tạo SDK — khai `<meta-data>`, không cần viết code

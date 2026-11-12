@@ -104,7 +104,8 @@ public final class ConsentCmp {
         }
     }
 
-    public static ConsentCmp get() {
+    /** Cung khoa voi init/initIfAbsent de khong doc instance giua luc dang thay the. */
+    public static synchronized ConsentCmp get() {
         ConsentCmp local = instance;
         if (local == null) {
             throw new IllegalStateException("ConsentCmp chua duoc khoi tao: khai <meta-data android:name=\""

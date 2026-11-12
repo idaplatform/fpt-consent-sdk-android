@@ -14,28 +14,28 @@ import vn.fpt.fis.cmp.consent.*;
 
 /** Applies only to SDK-owned views. Resource tags preserve semantic colors sharing the same default. */
 final class AppearanceRenderer {
-    static String token(int id) {
-        if (id == R.color.cmp_bg) return token("cmp_bg");
-        if (id == R.color.cmp_surface) return token("cmp_surface");
-        if (id == R.color.cmp_border) return token("cmp_border");
-        if (id == R.color.cmp_divider) return token("cmp_divider");
-        if (id == R.color.cmp_text_primary) return token("cmp_text_primary");
-        if (id == R.color.cmp_text_secondary) return token("cmp_text_secondary");
-        if (id == R.color.cmp_text_muted) return token("cmp_text_muted");
-        if (id == R.color.cmp_primary) return token("cmp_primary");
-        if (id == R.color.cmp_primary_pressed) return token("cmp_primary_pressed");
-        if (id == R.color.cmp_primary_soft) return token("cmp_primary_soft");
-        if (id == R.color.cmp_primary_border) return token("cmp_primary_border");
-        if (id == R.color.cmp_field_border) return token("cmp_field_border");
-        if (id == R.color.cmp_link) return token("cmp_link");
-        if (id == R.color.cmp_link_alt) return token("cmp_link_alt");
-        if (id == R.color.cmp_accent) return token("cmp_accent");
-        if (id == R.color.cmp_error) return token("cmp_error");
-        if (id == R.color.cmp_chip_bg) return token("cmp_chip_bg");
-        if (id == R.color.cmp_chip_text) return token("cmp_chip_text");
-        if (id == R.color.cmp_chip_border) return token("cmp_chip_border");
-        if (id == R.color.cmp_switch_thumb_off) return token("cmp_switch_thumb_off");
-        if (id == R.color.cmp_switch_track_off) return token("cmp_switch_track_off");
+    static String colorRole(int id) {
+        if (id == R.color.cmp_bg) return colorRole("cmp_bg");
+        if (id == R.color.cmp_surface) return colorRole("cmp_surface");
+        if (id == R.color.cmp_border) return colorRole("cmp_border");
+        if (id == R.color.cmp_divider) return colorRole("cmp_divider");
+        if (id == R.color.cmp_text_primary) return colorRole("cmp_text_primary");
+        if (id == R.color.cmp_text_secondary) return colorRole("cmp_text_secondary");
+        if (id == R.color.cmp_text_muted) return colorRole("cmp_text_muted");
+        if (id == R.color.cmp_primary) return colorRole("cmp_primary");
+        if (id == R.color.cmp_primary_pressed) return colorRole("cmp_primary_pressed");
+        if (id == R.color.cmp_primary_soft) return colorRole("cmp_primary_soft");
+        if (id == R.color.cmp_primary_border) return colorRole("cmp_primary_border");
+        if (id == R.color.cmp_field_border) return colorRole("cmp_field_border");
+        if (id == R.color.cmp_link) return colorRole("cmp_link");
+        if (id == R.color.cmp_link_alt) return colorRole("cmp_link_alt");
+        if (id == R.color.cmp_accent) return colorRole("cmp_accent");
+        if (id == R.color.cmp_error) return colorRole("cmp_error");
+        if (id == R.color.cmp_chip_bg) return colorRole("cmp_chip_bg");
+        if (id == R.color.cmp_chip_text) return colorRole("cmp_chip_text");
+        if (id == R.color.cmp_chip_border) return colorRole("cmp_chip_border");
+        if (id == R.color.cmp_switch_thumb_off) return colorRole("cmp_switch_thumb_off");
+        if (id == R.color.cmp_switch_track_off) return colorRole("cmp_switch_track_off");
         return "";
     }
     static String backgroundName(int id) {
@@ -49,7 +49,7 @@ final class AppearanceRenderer {
         if (id == R.drawable.cmp_bg_sheet) return "cmp_bg_sheet";
         return "";
     }
-    static String token(String name) {
+    static String colorRole(String name) {
         switch (name) {
             case "cmp_bg": return "background";
             case "cmp_text_primary": return "textPrimary";
@@ -106,7 +106,7 @@ final class AppearanceRenderer {
         if (name.equals("cmp_chip_border")) id = R.color.cmp_chip_border;
         if (name.equals("cmp_switch_thumb_off")) id = R.color.cmp_switch_thumb_off;
         if (name.equals("cmp_switch_track_off")) id = R.color.cmp_switch_track_off;
-        return a.color(token(name), id == 0 ? fallback : ContextCompat.getColor(view.getContext(), id));
+        return a.color(colorRole(name), id == 0 ? fallback : ContextCompat.getColor(view.getContext(), id));
     }
     static void apply(View view, ConsentAppearance a, AppearanceRepository repository) {
         if (a.json().optInt("schemaVersion") != 1) return;

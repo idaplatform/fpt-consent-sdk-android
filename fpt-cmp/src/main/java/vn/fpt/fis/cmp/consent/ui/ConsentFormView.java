@@ -215,7 +215,7 @@ public class ConsentFormView extends LinearLayout {
     }
 
     private int color(int res) {
-        return appearance.color(AppearanceRenderer.token(res), ContextCompat.getColor(getContext(), res));
+        return appearance.color(AppearanceRenderer.colorRole(res), ContextCompat.getColor(getContext(), res));
     }
 
     private int dp(float value) {
