@@ -1,1 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Mac dinh cua build.gradle; minSdkVersion cua app React Native (rootProject.ext) van ghi de khi merge. -->
+    <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="35" />
+</manifest>

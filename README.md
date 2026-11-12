@@ -157,6 +157,39 @@ cleartext ở **bản debug** — tạo `app/src/debug/AndroidManifest.xml`:
 </manifest>
 ```
 
+**Backup dữ liệu app.** SDK không khai `android:allowBackup` — đây là quyết định của app (nếu SDK khai
+`false` thì app đang để `true` sẽ lỗi `Manifest merger failed`). SDK lưu visitor ID và quyết định consent trong
+SharedPreferences `vn.fpt.fis.cmp.consent`, giao diện trong `vn.fpt.fis.cmp.appearance` và font trong
+`files/cmp-appearance-fonts`. Khuyến nghị tắt backup:
+
+```xml
+<application android:allowBackup="false" ... >
+```
+
+Nếu app cần giữ backup, loại trừ dữ liệu SDK — `res/xml/backup_rules.xml` (`android:fullBackupContent`,
+Android ≤ 11) và `res/xml/data_extraction_rules.xml` (`android:dataExtractionRules`, Android 12+):
+
+```xml
+<!-- backup_rules.xml -->
+<full-backup-content>
+    <exclude domain="sharedpref" path="vn.fpt.fis.cmp.consent.xml" />
+    <exclude domain="sharedpref" path="vn.fpt.fis.cmp.appearance.xml" />
+    <exclude domain="file" path="cmp-appearance-fonts/" />
+</full-backup-content>
+
+<!-- data_extraction_rules.xml -->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="sharedpref" path="vn.fpt.fis.cmp.consent.xml" />
+        <exclude domain="sharedpref" path="vn.fpt.fis.cmp.appearance.xml" />
+        <exclude domain="file" path="cmp-appearance-fonts/" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="sharedpref" path="vn.fpt.fis.cmp.consent.xml" />
+    </device-transfer>
+</data-extraction-rules>
+```
+
 Sync Gradle. Import được `vn.fpt.fis.cmp.consent.ConsentCmp` là xong phần cài đặt.
 
 ## Bước 4. Khởi tạo SDK — khai `<meta-data>`, không cần viết code

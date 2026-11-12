@@ -15,7 +15,9 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            // R8 rut gon + lam roi ma noi bo; API public duoc giu trong proguard-rules.pro.
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
