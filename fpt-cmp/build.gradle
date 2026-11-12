@@ -38,6 +38,14 @@ android {
 }
 
 dependencies {
+    // Publish alignment for Gradle and Maven consumers, including transitive AndroidX Kotlin.
+    api platform('org.jetbrains.kotlin:kotlin-bom:2.4.21')
+    ['kotlin-stdlib', 'kotlin-stdlib-jdk7', 'kotlin-stdlib-jdk8'].each { module ->
+        api("org.jetbrains.kotlin:${module}:2.4.21") {
+            because 'Publish the complete runtime floor for consumers without Gradle metadata'
+        }
+    }
+
     // Public API dung FragmentManager + annotation nen de o 'api' cho app consume duoc.
     api 'androidx.fragment:fragment:1.8.2'
     api 'androidx.annotation:annotation:1.8.2'
@@ -48,7 +56,7 @@ dependencies {
 
     // ConsentStateTest chay tren JVM; truoc day thieu nen test khong bien dich duoc.
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.robolectric:robolectric:4.14.1'
+    testImplementation 'org.robolectric:robolectric:4.17'
 }
 
 mavenPublishing {
@@ -57,9 +65,8 @@ mavenPublishing {
     // Can variant khac thi dung:
     //   configure(new com.vanniktech.maven.publish.AndroidSingleVariantLibrary('release', true, true))
 
-    // Upload len Central Portal roi tu release. Doi tham so thu hai thanh false neu muon
-    // tu bam Publish tren https://central.sonatype.com/publishing/deployments.
-    publishToMavenCentral(com.vanniktech.maven.publish.SonatypeHost.CENTRAL_PORTAL, true)
+    // Central Portal publishing; publishAndReleaseToMavenCentral releases automatically.
+    publishToMavenCentral()
 
     // Chi ky khi da cau hinh khoa GPG. Nho vay `publishToMavenLocal` chay duoc de kiem tra artifact
     // ngay ca khi chua tao khoa; con khi day len Central thi bat buoc phai co (Central tu choi
@@ -67,13 +74,13 @@ mavenPublishing {
     if (project.findProperty('signingInMemoryKey') || project.findProperty('signing.keyId')) {
         signAllPublications()
     } else {
-        logger.warn('[consent-cmp] Chua co khoa GPG -> BO QUA ky artifact. ' +
+        logger.warn('[fpt-cmp] Chua co khoa GPG -> BO QUA ky artifact. ' +
                 'Xem PUBLISHING.md truoc khi publish len Maven Central.')
     }
 
     coordinates(
-            project.findProperty('sdkGroupId') ?: 'io.github.idaflatform',
-            'fpt-consent-sdk',
+            project.findProperty('sdkGroupId') ?: 'io.github.idaplatform',
+            'fpt-cmp-sdk',
             project.findProperty('sdkVersion') ?: '1.0.0')
 
     pom {
@@ -83,7 +90,7 @@ mavenPublishing {
                 '(purposes, data fields, third parties) with required-item validation, and submits ' +
                 'the user decision as an auditable consent record.'
         inceptionYear = '2026'
-        url = project.findProperty('sdkProjectUrl') ?: 'https://github.com/idaflatform/fpt-consent-sdk-android'
+        url = project.findProperty('sdkProjectUrl') ?: 'https://github.com/idaplatform/fpt-consent-sdk-android'
 
         licenses {
             license {
@@ -94,8 +101,8 @@ mavenPublishing {
         }
         developers {
             developer {
-                id = project.findProperty('sdkDeveloperId') ?: 'idaflatform'
-                name = project.findProperty('sdkDeveloperName') ?: 'idaflatform'
+                id = project.findProperty('sdkDeveloperId') ?: 'idaplatform'
+                name = project.findProperty('sdkDeveloperName') ?: 'idaplatform'
                 url = project.findProperty('sdkProjectUrl') ?: ''
             }
         }

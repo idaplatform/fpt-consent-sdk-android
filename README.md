@@ -1,7 +1,8 @@
 # Tích hợp CMP Consent SDK cho Android — 8 bước
 
-> **Bản đang chuẩn bị phát hành: `1.2.0`.** Hướng dẫn dưới đây dùng bản public `1.1.0`
-> cho đến khi `1.2.0` xuất hiện trên Maven Central. Quy trình ký và publish: [PUBLISHING.md](PUBLISHING.md).
+> **Từ `1.2.0` SDK đổi tọa độ thành `io.github.idaplatform:fpt-cmp-sdk`** (bản ≤ `1.1.0` ở
+> `io.github.idaflatform:fpt-consent-sdk`). Chỉ dùng `1.2.1` khi bản này đã xuất hiện trên Maven Central.
+> Maintainer — quy trình ký và publish: [PUBLISHING.md](PUBLISHING.md).
 
 Tài liệu dành cho **lập trình viên app**. SDK phát hành trên **Maven Central** — public, không cần tài
 khoản, không cần khai URL repository riêng. Mẫu code có cả **Java** và **Kotlin**, cấu hình Gradle có cả
@@ -11,10 +12,10 @@ Cần 2 thông tin:
 
 | Thông tin | Ví dụ |
 |---|---|
-| Dependency | `io.github.idaflatform:fpt-consent-sdk:1.1.0` |
+| Dependency | `io.github.idaplatform:fpt-cmp-sdk:1.2.1` |
 | `codeConfig` (integration key của Collection Point) | `cp_xxx::t_yyy` |
 
-> **Phiên bản hiện tại: `1.1.0`.** Các bước dưới đây dùng 3 tính năng có từ `1.1.0`: **tự khởi tạo từ
+> **Phiên bản hiện tại: `1.2.1`.** Các bước dưới đây dùng 3 tính năng có từ `1.1.0`: **tự khởi tạo từ
 > `<meta-data>`**, **tự tải cấu hình (`cmpAutoLoad`) + `reload()`**, và **`form.submit(...)`**.
 > Đang dùng `1.0.x`? Xem [Nâng cấp từ 1.0.x](#nâng-cấp-từ-10x).
 
@@ -94,7 +95,7 @@ Nexus làm mirror, khai thêm URL mirror đó theo hướng dẫn nội bộ —
 
 ```groovy
 dependencies {
-    implementation 'io.github.idaflatform:fpt-consent-sdk:1.1.0'
+    implementation 'io.github.idaplatform:fpt-cmp-sdk:1.2.1'
 }
 ```
 
@@ -102,7 +103,7 @@ dependencies {
 
 ```kotlin
 dependencies {
-    implementation("io.github.idaflatform:fpt-consent-sdk:1.1.0")
+    implementation("io.github.idaplatform:fpt-cmp-sdk:1.2.1")
 }
 ```
 
@@ -158,37 +159,8 @@ cleartext ở **bản debug** — tạo `app/src/debug/AndroidManifest.xml`:
 ```
 
 **Backup dữ liệu app.** SDK không khai `android:allowBackup` — đây là quyết định của app (nếu SDK khai
-`false` thì app đang để `true` sẽ lỗi `Manifest merger failed`). SDK lưu visitor ID và quyết định consent trong
-SharedPreferences `vn.fpt.fis.cmp.consent`, giao diện trong `vn.fpt.fis.cmp.appearance` và font trong
-`files/cmp-appearance-fonts`. Khuyến nghị tắt backup:
-
-```xml
-<application android:allowBackup="false" ... >
-```
-
-Nếu app cần giữ backup, loại trừ dữ liệu SDK — `res/xml/backup_rules.xml` (`android:fullBackupContent`,
-Android ≤ 11) và `res/xml/data_extraction_rules.xml` (`android:dataExtractionRules`, Android 12+):
-
-```xml
-<!-- backup_rules.xml -->
-<full-backup-content>
-    <exclude domain="sharedpref" path="vn.fpt.fis.cmp.consent.xml" />
-    <exclude domain="sharedpref" path="vn.fpt.fis.cmp.appearance.xml" />
-    <exclude domain="file" path="cmp-appearance-fonts/" />
-</full-backup-content>
-
-<!-- data_extraction_rules.xml -->
-<data-extraction-rules>
-    <cloud-backup>
-        <exclude domain="sharedpref" path="vn.fpt.fis.cmp.consent.xml" />
-        <exclude domain="sharedpref" path="vn.fpt.fis.cmp.appearance.xml" />
-        <exclude domain="file" path="cmp-appearance-fonts/" />
-    </cloud-backup>
-    <device-transfer>
-        <exclude domain="sharedpref" path="vn.fpt.fis.cmp.consent.xml" />
-    </device-transfer>
-</data-extraction-rules>
-```
+`false` thì app đang để `true` sẽ lỗi `Manifest merger failed`). Để loại trừ dữ liệu SDK khỏi backup, dùng
+hai resource có sẵn trong AAR — xem [Bảo vệ dữ liệu SDK khỏi Android backup](#bảo-vệ-dữ-liệu-sdk-khỏi-android-backup).
 
 Sync Gradle. Import được `vn.fpt.fis.cmp.consent.ConsentCmp` là xong phần cài đặt.
 
@@ -563,7 +535,7 @@ SDK chưa có plugin riêng; app bọc `ConsentFormView` thành platform view / 
 
 | Lỗi | Nguyên nhân | Xử lý |
 |---|---|---|
-| `Could not find io.github.idaflatform:fpt-consent-sdk:<version>` | thiếu `mavenCentral()`, sai groupId, hoặc version không tồn tại | xem lại bước 1–2; hỏi đội CMP version hiện có |
+| `Could not find io.github.idaplatform:fpt-cmp-sdk:<version>` | thiếu `mavenCentral()`, sai groupId, hoặc version không tồn tại | xem lại bước 1–2; hỏi đội CMP version hiện có |
 | `Build was configured to prefer settings repositories` | project dùng `dependencyResolutionManagement` nhưng repo lại khai ở `build.gradle` | chuyển khai báo repo vào `settings.gradle` |
 | `Could not resolve ... repo1.maven.org` | mạng công ty chặn Maven Central | dùng URL mirror Nexus nội bộ, dependency giữ nguyên |
 | `minSdkVersion 16 cannot be smaller than version 21` | app có `minSdk` thấp hơn SDK | nâng `minSdk` lên 21 |
@@ -673,3 +645,35 @@ hình lần nào (trước đây gửi luôn mà không kiểm tra mục bắt b
 Gửi kèm khi báo lỗi cho đội CMP: `codeConfig`, `consentId` nhận được, thời điểm, và log tag `CMP`.
 
 ---
+
+## Bảo vệ dữ liệu SDK khỏi Android backup
+
+Thư viện không đặt `android:allowBackup` hoặc ghi đè chính sách backup của ứng dụng.
+Nếu app chưa khai báo exclusion, SharedPreferences và file SDK **vẫn có thể được
+backup/khôi phục** theo chính sách mặc định của app. App tích hợp cần opt in:
+
+```xml
+<application
+    android:fullBackupContent="@xml/cmp_backup_rules"
+    android:dataExtractionRules="@xml/cmp_data_extraction_rules">
+    <!-- Các cấu hình khác của app -->
+</application>
+```
+
+Hai resource XML này được đóng gói trong AAR. `fullBackupContent` áp dụng cho
+Android 6–11 (và app còn target API dưới 31); `dataExtractionRules` áp dụng
+trên Android 12+ khi app target API 31+, cho cả cloud backup và
+chuyển dữ liệu sang thiết bị khác. Cả hai loại trừ:
+
+| Domain | Path của SDK |
+|---|---|
+| `sharedpref` | `vn.fpt.fis.cmp.consent.xml` — visitor ID, quyết định và cache config |
+| `sharedpref` | `vn.fpt.fis.cmp.appearance.xml` — cache theme/font configuration |
+| `file` | `cmp-appearance-fonts/` — các file font tải về |
+
+Nếu app đã dùng rule riêng, **giữ các rule đó** và chép ba `<exclude>` vào
+`<full-backup-content>`, đồng thời vào cả `<cloud-backup>` và `<device-transfer>`
+trong rule Android 12+. Không thêm `<include>` chỉ dành cho SDK vì nó có thể thay
+đổi phạm vi backup dữ liệu khác của app. Không cần tắt backup toàn bộ ứng dụng.
+Sau khi tích hợp, kiểm tra merged manifest của app để bảo đảm cả hai resource
+được tham chiếu, và kiểm tra luồng backup/restore trên các API Android được hỗ trợ.
