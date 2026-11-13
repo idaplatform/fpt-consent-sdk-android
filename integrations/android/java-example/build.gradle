@@ -3,7 +3,7 @@ android {
     namespace 'vn.fpt.cmp.examples.java'
     compileSdk 35
     defaultConfig {
-        applicationId 'vn.fpt.cmp.examples.java'; minSdk 21; targetSdk 35
+        applicationId 'vn.fpt.cmp.examples.java'; minSdk 23; targetSdk 35
         versionCode 1; versionName '0.1.0'
         manifestPlaceholders = [cmpCodeConfig: providers.gradleProperty('cmpCodeConfig').getOrElse(''), cmpBaseUrl: providers.gradleProperty('cmpBaseUrl').getOrElse('https://cmp.biznext.vn')]
     }

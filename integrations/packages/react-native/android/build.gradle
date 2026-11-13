@@ -1,8 +1,8 @@
 apply plugin:'com.android.library'
 android {
     namespace 'vn.fpt.cmp.react'
-    compileSdk rootProject.ext.has('compileSdkVersion') ? rootProject.ext.compileSdkVersion : 35
-    defaultConfig { minSdk rootProject.ext.has('minSdkVersion') ? rootProject.ext.minSdkVersion : 24 }
+    compileSdk rootProject.ext.has('compileSdkVersion') ? rootProject.ext.compileSdkVersion : 36
+    defaultConfig { minSdk rootProject.ext.has('minSdkVersion') ? rootProject.ext.minSdkVersion : 24; aarMetadata { minCompileSdk 35 } }
     compileOptions { sourceCompatibility JavaVersion.VERSION_11;targetCompatibility JavaVersion.VERSION_11 }
 }
 repositories {google();mavenCentral();if(System.getenv('CMP_MAVEN_REPO'))maven{url=uri(System.getenv('CMP_MAVEN_REPO'))};if(System.getenv('CMP_BRIDGE_MAVEN_REPO'))maven{url=uri(System.getenv('CMP_BRIDGE_MAVEN_REPO'))}}

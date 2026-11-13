@@ -3,13 +3,17 @@
 
     <!-- Khop defaultConfig trong build.gradle (Gradle van la nguon chinh khi merge manifest). -->
     <uses-sdk
-        android:minSdkVersion="21"
-        android:targetSdkVersion="34" />
+        android:minSdkVersion="23"
+        android:targetSdkVersion="36" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <application>
+    <!-- Chan backup du lieu SDK va chi cho phep HTTPS. App can gia tri khac phai khai
+         tools:replace="android:allowBackup,android:usesCleartextTraffic" (xem README). -->
+    <application
+        android:allowBackup="false"
+        android:usesCleartextTraffic="false">
         <!-- Tự khởi tạo SDK từ <meta-data>; authority theo applicationId để không trùng giữa các app. -->
         <provider
             android:name="vn.fpt.fis.cmp.consent.ConsentInitProvider"

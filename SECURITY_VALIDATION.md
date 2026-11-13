@@ -99,7 +99,12 @@ and MAUI Material dependency graphs, no selected Kotlin 1.8.22, Netty
 DefectDojo engagement. Record the commit SHA, scan/job URL and DefectDojo result
 URL. Local build/audit success alone does not establish these results.
 
-For backup findings, the README documents the required host opt-in or merging
-of exclusions. The library intentionally does not override `allowBackup` or a
-customer's existing backup rules. Verify the customer's merged manifest and
+For backup and TLS findings, the SDK manifest declares `android:allowBackup="false"`
+and `android:usesCleartextTraffic="false"`. A host that needs other values must
+override them explicitly with `tools:replace`; the README documents this and the
+backup exclusions such hosts must merge. Verify the customer's merged manifest and
 backup/restore behavior after integration.
+
+Application manifests (for example the KMP example app) cannot declare `<uses-sdk>`
+min/target attributes under AGP 9; their SDK levels live in Gradle, so a
+`missing_uses_sdk_version` finding on those files is expected and not actionable.

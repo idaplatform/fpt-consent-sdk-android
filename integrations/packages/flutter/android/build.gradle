@@ -15,8 +15,8 @@ repositories {
     if(repo)maven { url=uri(repo) }
 }
 android {
-    namespace='vn.fpt.cmp.cmp_consent'; compileSdk=35
-    defaultConfig { minSdk=21 }
+    namespace='vn.fpt.cmp.cmp_consent'; compileSdk=36
+    defaultConfig { minSdk=23; aarMetadata { minCompileSdk=35 } }
     compileOptions { sourceCompatibility=JavaVersion.VERSION_11; targetCompatibility=JavaVersion.VERSION_11 }
 }
 dependencies {

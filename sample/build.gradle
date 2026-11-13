@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId (project.findProperty('cmp.sampleApplicationId') ?: 'vn.fpt.fis.cmp.sample')
-        minSdk 21
+        minSdk 23
         targetSdk 34
         versionCode 1
         versionName '1.0'

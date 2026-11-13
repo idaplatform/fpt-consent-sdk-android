@@ -43,7 +43,7 @@ gửi trùng, hiện lỗi trên form, lưu quyết định xuống máy, sinh `
 App lo: khai `codeConfig`, đặt form đúng chỗ, gọi `submit` ở nút của mình, và bật/tắt tính năng theo
 quyết định.
 
-Yêu cầu tối thiểu: `minSdk 21`. Quyền `INTERNET` do SDK tự khai báo.
+Yêu cầu tối thiểu: `minSdk 23`. Quyền `INTERNET` do SDK tự khai báo.
 
 ---
 
@@ -116,7 +116,7 @@ Yêu cầu tối thiểu với project app:
 
 | Mục | Tối thiểu | Lý do |
 |---|---|---|
-| `minSdk` | 21 | |
+| `minSdk` | 23 | API < 23 không có Keystore phần cứng, bị scanner đánh giá High |
 | `compileSdk` | **34** | `androidx.fragment 1.8.2`, `appcompat 1.7.0`, `core 1.13.1` khai `minCompileSdk=34` — thấp hơn thì build lỗi `checkDebugAarMetadata` |
 | Android Gradle Plugin | 8.1.1 | bản thấp nhất hỗ trợ chính thức `compileSdk 34` |
 | `compileOptions` của app | Java 8 / 11 / 17 đều được | SDK biên dịch ra bytecode Java 11 |
@@ -126,7 +126,7 @@ Yêu cầu tối thiểu với project app:
 ```groovy
 android {
     defaultConfig {
-        minSdk 21          // SDK yeu cau >= 21
+        minSdk 23          // SDK yeu cau >= 23
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8   // hoac 11 / 17
@@ -140,7 +140,7 @@ android {
 ```kotlin
 android {
     defaultConfig {
-        minSdk = 21        // SDK yeu cau >= 21
+        minSdk = 23        // SDK yeu cau >= 23
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8   // hoac 11 / 17
@@ -149,18 +149,26 @@ android {
 }
 ```
 
-Quyền `INTERNET` do SDK tự khai báo — app không cần thêm. Nếu CMP nội bộ còn chạy `http`, chỉ cho phép
-cleartext ở **bản debug** — tạo `app/src/debug/AndroidManifest.xml`:
+Quyền `INTERNET` do SDK tự khai báo — app không cần thêm.
+
+**Manifest của SDK đặt sẵn `android:allowBackup="false"` và `android:usesCleartextTraffic="false"`**
+(sau `1.2.1`, xem CHANGELOG). App khai giá trị khác cho hai thuộc tính này sẽ lỗi
+`Manifest merger failed : Attribute application@allowBackup value=(true) ...` — phải thêm `tools:replace`.
+
+Nếu CMP nội bộ còn chạy `http`, chỉ cho phép cleartext ở **bản debug** — tạo
+`app/src/debug/AndroidManifest.xml`:
 
 ```xml
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <application android:usesCleartextTraffic="true" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <application
+        android:usesCleartextTraffic="true"
+        tools:replace="android:usesCleartextTraffic" />
 </manifest>
 ```
 
-**Backup dữ liệu app.** SDK không khai `android:allowBackup` — đây là quyết định của app (nếu SDK khai
-`false` thì app đang để `true` sẽ lỗi `Manifest merger failed`). Để loại trừ dữ liệu SDK khỏi backup, dùng
-hai resource có sẵn trong AAR — xem [Bảo vệ dữ liệu SDK khỏi Android backup](#bảo-vệ-dữ-liệu-sdk-khỏi-android-backup).
+App bắt buộc giữ backup (`allowBackup="true"`) phải ghi đè có chủ đích và loại trừ dữ liệu SDK — xem
+[Bảo vệ dữ liệu SDK khỏi Android backup](#bảo-vệ-dữ-liệu-sdk-khỏi-android-backup).
 
 Sync Gradle. Import được `vn.fpt.fis.cmp.consent.ConsentCmp` là xong phần cài đặt.
 
@@ -538,13 +546,14 @@ SDK chưa có plugin riêng; app bọc `ConsentFormView` thành platform view / 
 | `Could not find io.github.idaplatform:fpt-cmp-sdk:<version>` | thiếu `mavenCentral()`, sai groupId, hoặc version không tồn tại | xem lại bước 1–2; hỏi đội CMP version hiện có |
 | `Build was configured to prefer settings repositories` | project dùng `dependencyResolutionManagement` nhưng repo lại khai ở `build.gradle` | chuyển khai báo repo vào `settings.gradle` |
 | `Could not resolve ... repo1.maven.org` | mạng công ty chặn Maven Central | dùng URL mirror Nexus nội bộ, dependency giữ nguyên |
-| `minSdkVersion 16 cannot be smaller than version 21` | app có `minSdk` thấp hơn SDK | nâng `minSdk` lên 21 |
+| `minSdkVersion 21 cannot be smaller than version 23` | app có `minSdk` thấp hơn SDK | nâng `minSdk` lên 23 |
+| `Manifest merger failed : Attribute application@allowBackup` (hoặc `@usesCleartextTraffic`) | app khai giá trị khác `false` của SDK | thêm `tools:replace` (bước 3) |
 | Không tìm thấy `submit` / `setAutoLoad` / `reload` khi compile | đang dùng bản `1.0.x` | nâng version — xem [Nâng cấp từ 1.0.x](#nâng-cấp-từ-10x) |
 | Form không hiện, `ConsentCmp.isInitialized()` trả `false` | thiếu / rỗng `<meta-data vn.fpt.cmp.codeConfig>` | xem lại bước 4, kiểm tra Merged Manifest |
 | `IllegalStateException: ConsentCmp chua duoc khoi tao` | gọi `ConsentCmp.get()` khi SDK chưa khởi tạo | như trên, hoặc kiểm tra `isInitialized()` trước |
 | `Chưa tải được cấu hình consent` khi submit | bấm nút trước khi form tải xong `/config` | chỉ bật nút sau `onLoaded` (bước 5a) |
 | Crash khi mở màn hình consent, log nhắc tới Material attrs | theme app thiếu attrs của Material | SDK đã tự bọc Material Bridge; nếu vẫn lỗi, đổi theme app sang `Theme.MaterialComponents.*.Bridge` |
-| `CLEARTEXT communication not permitted` lúc chạy app | CMP nội bộ dùng `http` | bật cleartext cho bản debug (bước 3) |
+| `CLEARTEXT communication not permitted` lúc chạy app | CMP nội bộ dùng `http` | bật cleartext cho bản debug kèm `tools:replace` (bước 3) |
 | Bấm nút nhưng không có bản ghi consent nào | `app:cmpEmbeddedInForm="true"` mà app chưa gọi `form.submit(...)` | gọi `form.submit(...)` ở nút của app (bước 6) |
 | Bản ghi thiếu `value` của một trường | tên truyền vào không khớp `name` trên portal, hoặc trường không `sharedWithSystem` | in cấu hình (bước 7) để lấy đúng `name` |
 | Trường có trên portal nhưng form không hiện toggle | trường đó `display = false` với mục đích này | chọn trường cho mục đích trên portal |
@@ -648,14 +657,16 @@ Gửi kèm khi báo lỗi cho đội CMP: `codeConfig`, `consentId` nhận đư�
 
 ## Bảo vệ dữ liệu SDK khỏi Android backup
 
-Thư viện không đặt `android:allowBackup` hoặc ghi đè chính sách backup của ứng dụng.
-Nếu app chưa khai báo exclusion, SharedPreferences và file SDK **vẫn có thể được
-backup/khôi phục** theo chính sách mặc định của app. App tích hợp cần opt in:
+Sau `1.2.1`, manifest của SDK đặt `android:allowBackup="false"`, nên mặc định app tích hợp
+không backup dữ liệu. App **bắt buộc** giữ backup phải ghi đè có chủ đích **và** loại trừ dữ liệu SDK —
+nếu không, visitor ID, quyết định consent và cache SDK sẽ được backup/khôi phục:
 
 ```xml
 <application
+    android:allowBackup="true"
     android:fullBackupContent="@xml/cmp_backup_rules"
-    android:dataExtractionRules="@xml/cmp_data_extraction_rules">
+    android:dataExtractionRules="@xml/cmp_data_extraction_rules"
+    tools:replace="android:allowBackup">
     <!-- Các cấu hình khác của app -->
 </application>
 ```
@@ -674,6 +685,6 @@ chuyển dữ liệu sang thiết bị khác. Cả hai loại trừ:
 Nếu app đã dùng rule riêng, **giữ các rule đó** và chép ba `<exclude>` vào
 `<full-backup-content>`, đồng thời vào cả `<cloud-backup>` và `<device-transfer>`
 trong rule Android 12+. Không thêm `<include>` chỉ dành cho SDK vì nó có thể thay
-đổi phạm vi backup dữ liệu khác của app. Không cần tắt backup toàn bộ ứng dụng.
+đổi phạm vi backup dữ liệu khác của app.
 Sau khi tích hợp, kiểm tra merged manifest của app để bảo đảm cả hai resource
 được tham chiếu, và kiểm tra luồng backup/restore trên các API Android được hỗ trợ.

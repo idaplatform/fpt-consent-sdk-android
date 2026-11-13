@@ -1,9 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="35" />
+    <!-- minSdk 23 / targetSdk 36 nam trong build.gradle.kts: AGP 9 cam <uses-sdk> trong manifest cua app. -->
     <!-- Khong cho backup du lieu app (visitor ID, quyet dinh consent) ra cloud / adb backup. -->
     <application
         android:allowBackup="false"
         android:fullBackupContent="false"
+        android:usesCleartextTraffic="false"
         android:label="CMP KMP Example"
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
         <activity android:name=".MainActivity" android:exported="true">

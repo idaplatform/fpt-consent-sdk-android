@@ -7,8 +7,8 @@ plugins {
 kotlin {
     android {
         namespace = "vn.fpt.cmp.kmp"
-        compileSdk = 35
-        minSdk = 21
+        compileSdk = 36
+        minSdk = 23
         compilerOptions { jvmTarget.set(JvmTarget.JVM_11) }
     }
     if (System.getProperty("os.name").contains("Mac")) {

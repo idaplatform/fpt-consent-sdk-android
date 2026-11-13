@@ -4,7 +4,7 @@ plugins { id 'com.android.application'; id 'org.jetbrains.kotlin.plugin.compose'
 android {
     namespace 'vn.fpt.cmp.examples.compose'; compileSdk 35
     defaultConfig {
-        applicationId 'vn.fpt.cmp.examples.compose'; minSdk 21; targetSdk 35; versionCode 1; versionName '0.1.0'
+        applicationId 'vn.fpt.cmp.examples.compose'; minSdk 23; targetSdk 35; versionCode 1; versionName '0.1.0'
         manifestPlaceholders = [cmpCodeConfig: providers.gradleProperty('cmpCodeConfig').getOrElse(''), cmpBaseUrl: providers.gradleProperty('cmpBaseUrl').getOrElse('https://cmp.biznext.vn')]
     }
     buildFeatures { compose true }
