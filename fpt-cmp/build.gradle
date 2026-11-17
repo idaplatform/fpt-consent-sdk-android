@@ -41,10 +41,13 @@ android {
 }
 
 dependencies {
-    // Publish alignment for Gradle and Maven consumers, including transitive AndroidX Kotlin.
-    api platform('org.jetbrains.kotlin:kotlin-bom:2.4.21')
+    // Publish alignment for Gradle and Maven consumers, including transitive AndroidX Kotlin
+    // (1.8.22). 2.1.x metadata stays readable by Kotlin 2.0+ host compilers; 2.4.x would force
+    // hosts onto Kotlin >= 2.3 ("binary version of its metadata is 2.4.0").
+    def kotlinRuntime = '2.1.21'
+    api platform("org.jetbrains.kotlin:kotlin-bom:${kotlinRuntime}")
     ['kotlin-stdlib', 'kotlin-stdlib-jdk7', 'kotlin-stdlib-jdk8'].each { module ->
-        api("org.jetbrains.kotlin:${module}:2.4.21") {
+        api("org.jetbrains.kotlin:${module}:${kotlinRuntime}") {
             because 'Publish the complete runtime floor for consumers without Gradle metadata'
         }
     }

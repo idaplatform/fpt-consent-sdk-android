@@ -4,9 +4,11 @@
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-11-17
+
 ### Security
 - Commit Flutter and MAUI binding lockfiles for dependency/security discovery.
-- Publish Kotlin stdlib/BOM 2.4.21 instead of relying on AndroidX's older runtime.
+- Publish Kotlin stdlib/BOM 2.1.21 instead of relying on AndroidX's older runtime (1.8.22). 2.1 metadata keeps Kotlin 2.0+ host compilers working; the SDK's own build uses the Kotlin 2.4.21 toolchain.
 - Upgrade release/integration builds to AGP 9.5.0, Gradle 9.6.0 and publishing plugin 0.37.0.
 - Upgrade Robolectric to 4.17; its previous test graph also contained Bouncy Castle 1.78.1.
 - Add SDK backup-exclusion resources and host integration guidance.

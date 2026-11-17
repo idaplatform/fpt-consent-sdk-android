@@ -5,7 +5,7 @@
 The release build and explicitly pinned integration builds use AGP 9.5.0 and
 Gradle 9.6.0. The publishing plugin is 0.37.0 and Robolectric is 4.17 (the old
 4.14.1 test dependency also brought Bouncy Castle 1.78.1). The SDK publishes the Kotlin BOM
-and explicit stdlib/jdk7/jdk8 dependencies at 2.4.21, so the upgrade is carried in both
+and explicit stdlib/jdk7/jdk8 dependencies at 2.1.21, so the upgrade is carried in both
 Gradle metadata and the Maven POM. Newer compatible versions can still win
 dependency resolution; these declarations do not force a downgrade.
 The release build explicitly upgrades AGP's Kotlin compiler/plugin to 2.4.21
@@ -14,7 +14,9 @@ affects Kotlin Gradle plugin build-cache deserialization before 2.4.20;
 upgrading stdlib alone does not fix the build tool. The SDK release build uses
 the fixed stable compiler version; legacy host toolchains require separate review.
 
-Kotlin 2.4 metadata requires a compatible Kotlin compiler in Kotlin host apps.
+The published runtime stays on Kotlin 2.1 metadata so Kotlin 2.0+ host compilers can
+read it; publishing 2.4.x stdlib broke a Kotlin 2.1.0 Flutter host
+(`binary version of its metadata is 2.4.0, expected version is 2.1.0`).
 Hosts also need compatible D8/R8 versions; consult the official
 [Kotlin/Android compiler compatibility table](https://developer.android.com/build/kotlin-support).
 Validate older React Native/Flutter host toolchains before upgrading the SDK;
@@ -72,7 +74,7 @@ Verified on Windows with JDK 17, Flutter 3.35.7 and .NET SDK 9.0.320:
 |---|---|
 | SDK unit tests | 25 passed, no failures/errors/skips |
 | SDK release AAR, lint and native sample APK | Passed; lint has 0 errors and 11 warnings |
-| Publication POM and Gradle metadata | All three stdlib artifacts and BOM use 2.4.21 |
+| Publication POM and Gradle metadata | All three stdlib artifacts and BOM use 2.1.21 |
 | Java and Compose sample APKs | Passed |
 | Native bridge unit tests and local publication | 4 tests passed |
 | KMP Android sample APK | Passed |
