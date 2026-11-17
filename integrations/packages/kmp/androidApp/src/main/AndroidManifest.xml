@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Khai bao cho scanner; build.gradle.kts van la nguon chinh va ghi de khi merge.
          AGP 9 chi cho phep the nay khi gradle.properties dat android.usesSdkInManifest.disallowed=false. -->
-    <uses-sdk android:minSdkVersion="30" android:targetSdkVersion="36" />
+    <uses-sdk android:minSdkVersion="23" android:targetSdkVersion="36" />
     <!-- Khong cho backup du lieu app (visitor ID, quyet dinh consent) ra cloud / adb backup. -->
     <application
         android:allowBackup="false"

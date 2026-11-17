@@ -16,7 +16,7 @@ repositories {
 }
 android {
     namespace='vn.fpt.cmp.cmp_consent'; compileSdk=36
-    defaultConfig { minSdk=30; aarMetadata { minCompileSdk=35 } }
+    defaultConfig { minSdk=23; aarMetadata { minCompileSdk=35 } }
     compileOptions { sourceCompatibility=JavaVersion.VERSION_11; targetCompatibility=JavaVersion.VERSION_11 }
 }
 dependencies {

@@ -8,7 +8,7 @@ kotlin {
     android {
         namespace = "vn.fpt.cmp.kmp"
         compileSdk = 36
-        minSdk = 30
+        minSdk = 23
         compilerOptions { jvmTarget.set(JvmTarget.JVM_11) }
     }
     if (System.getProperty("os.name").contains("Mac")) {

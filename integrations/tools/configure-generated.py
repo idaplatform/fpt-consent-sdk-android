@@ -45,7 +45,7 @@ repositories {
 }
 android {
     namespace='vn.fpt.cmp.cmp_consent'; compileSdk=35
-    defaultConfig { minSdk=30 }
+    defaultConfig { minSdk=21 }
     compileOptions { sourceCompatibility=JavaVersion.VERSION_11; targetCompatibility=JavaVersion.VERSION_11 }
 }
 kotlin { compilerOptions { jvmTarget = JvmTarget.JVM_11 } }

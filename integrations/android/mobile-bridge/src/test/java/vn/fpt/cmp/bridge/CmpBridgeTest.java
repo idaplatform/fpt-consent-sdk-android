@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicReference;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk=30,manifest=Config.NONE)
+@Config(sdk=28,manifest=Config.NONE)
 public class CmpBridgeTest {
  @Test public void realSdkSubmitsMappedValuesAndReturnsConsentId()throws Exception {
   LoopbackServer server=new LoopbackServer();AtomicReference<String> submitted=server.submitted;

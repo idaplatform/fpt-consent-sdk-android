@@ -28,7 +28,7 @@ import vn.fpt.fis.cmp.consent.model.ConsentConfig;
 import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 30, manifest = Config.NONE)
+@Config(sdk = 28, manifest = Config.NONE)
 @LooperMode(LooperMode.Mode.PAUSED)
 public class ConfigAppearanceTest {
     private ServerSocket server;
