@@ -105,6 +105,8 @@ override them explicitly with `tools:replace`; the README documents this and the
 backup exclusions such hosts must merge. Verify the customer's merged manifest and
 backup/restore behavior after integration.
 
-Application manifests (for example the KMP example app) cannot declare `<uses-sdk>`
-min/target attributes under AGP 9; their SDK levels live in Gradle, so a
-`missing_uses_sdk_version` finding on those files is expected and not actionable.
+The SDK and every wrapper require `minSdk 30` (Coverity `unsafe_min_sdk_version`)
+and target API 36. AGP 9 rejects `<uses-sdk>` min/target attributes in
+application manifests by default; the KMP example app opts back in with
+`android.usesSdkInManifest.disallowed=false` so the scanner sees the declared
+levels, while `build.gradle.kts` remains the source of truth.

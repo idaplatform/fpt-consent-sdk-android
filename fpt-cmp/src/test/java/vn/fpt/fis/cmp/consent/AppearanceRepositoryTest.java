@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 28, manifest = Config.NONE)
+@Config(sdk = 30, manifest = Config.NONE)
 public class AppearanceRepositoryTest {
     private Context context;
     private ConsentOptions options(String code) { return new ConsentOptions.Builder().baseUrl("https://cmp.example.test").codeConfig(code).build(); }

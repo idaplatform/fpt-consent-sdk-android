@@ -21,8 +21,8 @@ android {
         applicationId = "vn.fpt.cmp.cmp_consent_example"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        // Plugin cmp_consent / FPT CMP SDK yeu cau API 23+.
-        minSdk = maxOf(flutter.minSdkVersion, 23)
+        // Plugin cmp_consent / FPT CMP SDK yeu cau API 30+.
+        minSdk = maxOf(flutter.minSdkVersion, 30)
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

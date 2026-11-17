@@ -11,12 +11,12 @@
 - Upgrade Robolectric to 4.17; its previous test graph also contained Bouncy Castle 1.78.1.
 - Add SDK backup-exclusion resources and host integration guidance.
 - SDK manifest sets `android:allowBackup="false"` and `android:usesCleartextTraffic="false"` (Coverity `backups_allowed`, `missing_tls`). **Breaking:** hosts declaring other values must add `tools:replace`; debug cleartext examples updated.
-- Raise `minSdk` from 21 to 23 for the SDK and the mobile-bridge, Flutter, KMP and MAUI wrappers (Coverity `unsafe_min_sdk_version`). **Breaking** for apps that still support Android 5.x.
+- Raise `minSdk` to 30 (Android 11) for the SDK and the mobile-bridge, Capacitor, Flutter, React Native, KMP and MAUI wrappers, following Coverity's `unsafe_min_sdk_version` recommendation. **Breaking:** apps that still support Android 10 or lower can no longer integrate the SDK.
 - Raise `targetSdk`/`compileSdk` to 36 (Coverity `outdated_target_sdk_version`); `aarMetadata.minCompileSdk` keeps host apps on compileSdk 34 (SDK) / 35 (wrappers).
 - Disable cleartext traffic in the KMP example app.
 
 ### Build compatibility
-- AGP 9 rejects `<uses-sdk>` min/target attributes in application manifests, so the KMP example app declares SDK levels only in `build.gradle.kts`.
+- The KMP example app declares `<uses-sdk>` again (Coverity `missing_uses_sdk_version`); AGP 9 only accepts it with `android.usesSdkInManifest.disallowed=false` in `gradle.properties`, and `build.gradle.kts` remains the source of truth.
 - Migrate the KMP Android target to the Android KMP library plugin.
 - Kotlin hosts need a compiler compatible with Kotlin 2.4 metadata; Flutter's legacy host uses explicit AGP compatibility properties.
 

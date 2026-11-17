@@ -43,7 +43,7 @@ gửi trùng, hiện lỗi trên form, lưu quyết định xuống máy, sinh `
 App lo: khai `codeConfig`, đặt form đúng chỗ, gọi `submit` ở nút của mình, và bật/tắt tính năng theo
 quyết định.
 
-Yêu cầu tối thiểu: `minSdk 23`. Quyền `INTERNET` do SDK tự khai báo.
+Yêu cầu tối thiểu: `minSdk 30` (Android 11). Quyền `INTERNET` do SDK tự khai báo.
 
 ---
 
@@ -116,7 +116,7 @@ Yêu cầu tối thiểu với project app:
 
 | Mục | Tối thiểu | Lý do |
 |---|---|---|
-| `minSdk` | 23 | API < 23 không có Keystore phần cứng, bị scanner đánh giá High |
+| `minSdk` | 30 | mức tối thiểu Coverity khuyến nghị (`unsafe_min_sdk_version`); Android 10 trở xuống không còn được hỗ trợ |
 | `compileSdk` | **34** | `androidx.fragment 1.8.2`, `appcompat 1.7.0`, `core 1.13.1` khai `minCompileSdk=34` — thấp hơn thì build lỗi `checkDebugAarMetadata` |
 | Android Gradle Plugin | 8.1.1 | bản thấp nhất hỗ trợ chính thức `compileSdk 34` |
 | `compileOptions` của app | Java 8 / 11 / 17 đều được | SDK biên dịch ra bytecode Java 11 |
@@ -126,7 +126,7 @@ Yêu cầu tối thiểu với project app:
 ```groovy
 android {
     defaultConfig {
-        minSdk 23          // SDK yeu cau >= 23
+        minSdk 30          // SDK yeu cau >= 30
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8   // hoac 11 / 17
@@ -140,7 +140,7 @@ android {
 ```kotlin
 android {
     defaultConfig {
-        minSdk = 23        // SDK yeu cau >= 23
+        minSdk = 30        // SDK yeu cau >= 30
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8   // hoac 11 / 17
@@ -546,7 +546,7 @@ SDK chưa có plugin riêng; app bọc `ConsentFormView` thành platform view / 
 | `Could not find io.github.idaplatform:fpt-cmp-sdk:<version>` | thiếu `mavenCentral()`, sai groupId, hoặc version không tồn tại | xem lại bước 1–2; hỏi đội CMP version hiện có |
 | `Build was configured to prefer settings repositories` | project dùng `dependencyResolutionManagement` nhưng repo lại khai ở `build.gradle` | chuyển khai báo repo vào `settings.gradle` |
 | `Could not resolve ... repo1.maven.org` | mạng công ty chặn Maven Central | dùng URL mirror Nexus nội bộ, dependency giữ nguyên |
-| `minSdkVersion 21 cannot be smaller than version 23` | app có `minSdk` thấp hơn SDK | nâng `minSdk` lên 23 |
+| `minSdkVersion 23 cannot be smaller than version 30` | app có `minSdk` thấp hơn SDK | nâng `minSdk` lên 30 |
 | `Manifest merger failed : Attribute application@allowBackup` (hoặc `@usesCleartextTraffic`) | app khai giá trị khác `false` của SDK | thêm `tools:replace` (bước 3) |
 | Không tìm thấy `submit` / `setAutoLoad` / `reload` khi compile | đang dùng bản `1.0.x` | nâng version — xem [Nâng cấp từ 1.0.x](#nâng-cấp-từ-10x) |
 | Form không hiện, `ConsentCmp.isInitialized()` trả `false` | thiếu / rỗng `<meta-data vn.fpt.cmp.codeConfig>` | xem lại bước 4, kiểm tra Merged Manifest |
@@ -672,7 +672,7 @@ nếu không, visitor ID, quyết định consent và cache SDK sẽ được ba
 ```
 
 Hai resource XML này được đóng gói trong AAR. `fullBackupContent` áp dụng cho
-Android 6–11 (và app còn target API dưới 31); `dataExtractionRules` áp dụng
+Android 11 (và app còn target API dưới 31); `dataExtractionRules` áp dụng
 trên Android 12+ khi app target API 31+, cho cả cloud backup và
 chuyển dữ liệu sang thiết bị khác. Cả hai loại trừ:
 

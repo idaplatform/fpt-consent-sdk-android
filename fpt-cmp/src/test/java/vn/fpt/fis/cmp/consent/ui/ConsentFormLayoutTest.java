@@ -33,7 +33,7 @@ import vn.fpt.fis.cmp.consent.model.ConsentUiConfig;
 import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 28, qualifiers = "w360dp-h800dp-xhdpi", manifest = Config.NONE)
+@Config(sdk = 30, qualifiers = "w360dp-h800dp-xhdpi", manifest = Config.NONE)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 public class ConsentFormLayoutTest {
     private ConsentFormView form(float fontScale) {

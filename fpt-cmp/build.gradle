@@ -8,8 +8,8 @@ android {
     compileSdk 36
 
     defaultConfig {
-        // API 23+: Keystore phan cung; thap hon bi danh gia la khong an toan.
-        minSdk 23
+        // API 30+: muc toi thieu Coverity khuyen nghi (unsafe_min_sdk_version).
+        minSdk 30
         targetSdk 36
         // compileSdk 36 chi dung de build; khong bat app tich hop nang compileSdk (SDK khong dung API > 34).
         aarMetadata { minCompileSdk 34 }
