@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+### Added
+- `ConsentFormView` hiện link "Xem Chính sách quyền riêng tư" từ `config.privacyPolicyUrl` của `/config` (link của mẫu consent mà Collection Point đang dùng). Chỉ nhận URL `http`/`https`; trống hoặc không hợp lệ thì ẩn.
+- `ConsentUiConfig.privacyPolicyUrl` + `privacyPolicyLink()`; `ConsentFormView.setOnPrivacyPolicyClickListener(...)` để app tự mở link, mặc định mở trình duyệt.
+
 ## [1.3.0] - 2026-11-17
 
 ### Security

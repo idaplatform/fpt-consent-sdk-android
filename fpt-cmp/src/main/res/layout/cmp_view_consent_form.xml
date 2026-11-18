@@ -230,6 +230,21 @@
                 android:textSize="@dimen/cmp_text_body"
                 android:visibility="gone" android:tag="cmp::cmp_error" />
 
+            <!-- Link chinh sach quyen rieng tu tu /config (config.privacyPolicyUrl); an khi trong -->
+            <TextView
+                android:id="@+id/cmp_tv_privacy_policy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:minHeight="@dimen/cmp_touch"
+                android:paddingStart="@dimen/cmp_space_lg"
+                android:paddingEnd="@dimen/cmp_space_lg"
+                android:text="@string/cmp_privacy_policy"
+                android:textColor="@color/cmp_link"
+                android:textSize="@dimen/cmp_text_body"
+                android:visibility="gone" android:tag="cmp::cmp_link" />
+
             <LinearLayout
                 android:id="@+id/cmp_container_actions"
                 android:layout_width="match_parent"

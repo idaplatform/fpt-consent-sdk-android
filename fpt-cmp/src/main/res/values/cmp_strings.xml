@@ -19,6 +19,7 @@
     <string name="cmp_close">Đóng</string>
     <string name="cmp_error_no_config">Chưa tải được cấu hình consent, vui lòng thử lại</string>
     <string name="cmp_error_not_initialized">SDK consent chưa được khởi tạo</string>
+    <string name="cmp_privacy_policy">Xem Chính sách quyền riêng tư</string>
 
     <!-- Giao dien accordion -->
     <string name="cmp_view_purposes">Xem %1$d mục đích</string>

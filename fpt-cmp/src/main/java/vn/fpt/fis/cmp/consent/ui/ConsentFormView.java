@@ -1,11 +1,16 @@
 package vn.fpt.fis.cmp.consent.ui;
 
 import vn.fpt.fis.cmp.consent.ConsentAppearance;
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -101,6 +106,16 @@ public class ConsentFormView extends LinearLayout {
         }
     }
 
+    /** Nguoi dung bam link chinh sach quyen rieng tu (config.privacyPolicyUrl tu portal CMP). */
+    public interface OnPrivacyPolicyClickListener {
+
+        /**
+         * @param url link http/https da kiem tra
+         * @return true neu app tu mo link (vd man hinh WebView rieng); false de SDK mo trinh duyet
+         */
+        boolean onPrivacyPolicyClick(String url);
+    }
+
     /** Mo ta dai hon nguong nay thi cat 3 dong + nut "Xem them" (giong ban React). */
     private static final int DESCRIPTION_CLAMP_CHARS = 120;
     private static final int DESCRIPTION_CLAMP_LINES = 3;
@@ -109,6 +124,7 @@ public class ConsentFormView extends LinearLayout {
     private TextView tvTitle;
     private TextView tvDescription;
     private TextView tvError;
+    private TextView tvPrivacyPolicy;
     private TextView tvSummary;
     private TextView tvToggleList;
     private ImageView ivToggleList;
@@ -137,6 +153,10 @@ public class ConsentFormView extends LinearLayout {
     private OnStateChangeListener stateChangeListener;
     private OnSubmitResultListener submitResultListener;
     private OnLoadListener loadListener;
+    private OnPrivacyPolicyClickListener privacyPolicyClickListener;
+    /** Link chinh sach dang hien; null = an link. */
+    @Nullable
+    private String privacyPolicyUrl;
 
     /** Chan vong lap khi code tu set trang thai switch. */
     private boolean binding;
@@ -233,6 +253,8 @@ public class ConsentFormView extends LinearLayout {
         tvTitle = findViewById(R.id.cmp_tv_title);
         tvDescription = findViewById(R.id.cmp_tv_description);
         tvError = findViewById(R.id.cmp_tv_error);
+        tvPrivacyPolicy = findViewById(R.id.cmp_tv_privacy_policy);
+        tvPrivacyPolicy.setPaintFlags(tvPrivacyPolicy.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         tvSummary = findViewById(R.id.cmp_tv_summary);
         btnToggleList = findViewById(R.id.cmp_btn_toggle_list);
         tvToggleList = findViewById(R.id.cmp_tv_toggle_list);
@@ -262,6 +284,12 @@ public class ConsentFormView extends LinearLayout {
             @Override
             public void onClick(View v) {
                 reload();
+            }
+        });
+        tvPrivacyPolicy.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openPrivacyPolicy();
             }
         });
         btnToggleList.setOnClickListener(new OnClickListener() {
@@ -578,6 +606,42 @@ public class ConsentFormView extends LinearLayout {
         this.stateChangeListener = listener;
     }
 
+    /** Thay cach mo link chinh sach; mac dinh (null) SDK mo bang trinh duyet. */
+    public void setOnPrivacyPolicyClickListener(@Nullable OnPrivacyPolicyClickListener listener) {
+        this.privacyPolicyClickListener = listener;
+    }
+
+    /** Link chinh sach dang hien tren form; null khi cau hinh khong co link hop le. */
+    @Nullable
+    public String privacyPolicyUrl() {
+        return privacyPolicyUrl;
+    }
+
+    private void openPrivacyPolicy() {
+        String url = privacyPolicyUrl;
+        if (url == null) {
+            return;
+        }
+        if (privacyPolicyClickListener != null && privacyPolicyClickListener.onPrivacyPolicyClick(url)) {
+            return;
+        }
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        if (!(getContext() instanceof Activity)) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+        try {
+            getContext().startActivity(intent);
+        } catch (ActivityNotFoundException ignored) {
+            // May khong co trinh duyet: bo qua, khong lam sap app.
+        }
+    }
+
+    private void bindPrivacyPolicy(@Nullable ConsentConfig config) {
+        privacyPolicyUrl = config == null || config.config == null ? null : config.config.privacyPolicyLink();
+        tvPrivacyPolicy.setVisibility(privacyPolicyUrl == null ? GONE : VISIBLE);
+        updateFooterVisibility();
+    }
+
     /** Muc dich bat buoc dau tien chua duoc dong y; null khi khong thieu purpose nao. */
     @Nullable
     public ConsentItem missingRequired() {
@@ -655,6 +719,7 @@ public class ConsentFormView extends LinearLayout {
         holders.clear();
         containerPurposes.removeAllViews();
         openKey = null;
+        bindPrivacyPolicy(config);
 
         if (config == null) {
             return;
@@ -728,7 +793,8 @@ public class ConsentFormView extends LinearLayout {
 
     /** Chan khoi chi chiem cho (va ke duong phan cach) khi co loi hoac co nut. */
     private void updateFooterVisibility() {
-        boolean hasContent = tvError.getVisibility() == VISIBLE || actionsVisible;
+        boolean hasContent = tvError.getVisibility() == VISIBLE
+                || tvPrivacyPolicy.getVisibility() == VISIBLE || actionsVisible;
         footer.setVisibility(hasContent ? VISIBLE : GONE);
         footerDivider.setVisibility(hasContent && wide ? VISIBLE : GONE);
     }
@@ -800,7 +866,8 @@ public class ConsentFormView extends LinearLayout {
             masterView.setPadding(side, 0, side, 0);
         }
         textSize(tvDescription, R.dimen.cmp_text_small, R.dimen.cmp_text_small_compact);
-        for (TextView text : new TextView[]{tvSection, tvError, tvSummary, tvToggleList,
+        tvPrivacyPolicy.setPadding(side, 0, side, 0);
+        for (TextView text : new TextView[]{tvSection, tvError, tvPrivacyPolicy, tvSummary, tvToggleList,
                 btnSubmit, tvErrorState}) {
             textSize(text, R.dimen.cmp_text_body, R.dimen.cmp_text_body_compact);
         }

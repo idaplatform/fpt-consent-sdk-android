@@ -610,6 +610,12 @@ Người dùng đã trả lời trước đó thì form hiện lại lựa chọ
 | — | `bind(config, state)` | tự dựng form khi không dùng autoload |
 | `app:cmpThirdPartiesOnSharedOnly="true"` | `setThirdPartiesOnSharedOnly(true)` | chỉ hiện "Chia sẻ với" khi mục đích có trường được chia sẻ |
 | `app:cmpShowSectionTitle="true"` | `setSectionTitleVisible(true)` | hiện dòng tiêu đề nhỏ phía trên thẻ (từ `1.2.0` mặc định ẩn) |
+| — | `setOnPrivacyPolicyClickListener(url -> true)` | tự mở link chính sách (vd WebView của app); trả `false` / không đặt = SDK mở trình duyệt |
+| — | `privacyPolicyUrl()` | link chính sách đang hiện; `null` khi cấu hình không có link hợp lệ |
+
+Link **"Xem Chính sách quyền riêng tư"** lấy từ `config.privacyPolicyUrl` của `/config` — tức trường
+"Link chính sách quyền riêng tư" của mẫu consent mà Collection Point đang dùng trên portal CMP. Mỗi app /
+khách hàng có link riêng theo integration key, app không cần cấu hình. Link không phải `http(s)` thì ẩn.
 
 ### Giao diện (từ `1.2.0`)
 

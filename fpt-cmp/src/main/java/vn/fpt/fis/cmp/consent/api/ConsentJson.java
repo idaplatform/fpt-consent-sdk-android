@@ -63,6 +63,7 @@ public final class ConsentJson {
                 optString(json, "title"),
                 optString(json, "description"),
                 optString(json, "submitLabel"),
+                optString(json, "privacyPolicyUrl"),
                 parseItems(json.optJSONArray("items")));
     }
 
